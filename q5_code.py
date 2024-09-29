@@ -62,3 +62,5 @@ def plot_histograms(original_img, equalized_img):
 
 # Plot histograms before and after equalization
 plot_histograms(image, equalized_image)
+
+
