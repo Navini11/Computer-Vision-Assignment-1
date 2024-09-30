@@ -12,9 +12,13 @@ lab_image = cv.cvtColor(image, cv.COLOR_BGR2LAB)
 # Split into L*, a*, b* channels
 L, a, b = cv.split(lab_image)
 
+#normalize L
+L = L/255.0
+
 # Apply gamma correction to the L* plane
 gamma = 2.2  # Example gamma value
-L_corrected = np.array(255 * (L / 255) ** (1 / gamma), dtype='uint8')
+L_corrected = np.array( 255*(L) ** (gamma), dtype='uint8')
+# 255 * (L^gamma)
 
 # Merge the corrected L* channel back with the original a* and b* channels
 lab_corrected = cv.merge((L_corrected, a, b))
