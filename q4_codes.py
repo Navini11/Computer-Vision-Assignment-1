@@ -73,9 +73,38 @@ plt.axis('off')
 plt.tight_layout()
 plt.show()
 
+###Vibrancy Transformation Curve in HSV Saturation Plane
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Set the transformation parameter 'a'
+a = 0.4
+sigma = 70
+
+# Generate a range of input pixel values from 0 to 255
+input_values = np.arange(0, 256)
+
+# Intensity transformation function
+def intensity_transform(x, a, sigma=70):
+    x = np.clip(x, 0, 255)  # Ensure x stays within valid range
+    transformed = x + a * 128 * np.exp(-(x - 128) ** 2 / (2 * sigma ** 2))
+    return np.clip(transformed, 0, 255).astype(np.uint8)
+
+# Apply the transformation to each pixel value
+output_values = [intensity_transform(x, a, sigma) for x in input_values]
+
+# Plot the transformation
+plt.figure(figsize=(8, 6))
+plt.plot(input_values, output_values, label=f'Vibrancy transformation (a={a}, sigma={sigma})', color='red')
+plt.xlabel('Input Pixel Value')
+plt.ylabel('Output Pixel Value')
+plt.title('Vibrancy Transformation Curve in HSV Saturation Plane')
+plt.legend()
+plt.grid(True)
+plt.show()
 
 
-## code for finding optimal a value by plotting for a=0 to a=1 by step of 0.1
+## to check an optimal a value
 for i in range (0,11,1):
     a=i/10
 
@@ -107,5 +136,3 @@ for i in range (0,11,1):
 
     plt.tight_layout()
     plt.show()
-
-
