@@ -24,7 +24,7 @@ def custom_histogram_equalization(img):
     return equalized_img
 
 # Load the image and convert to grayscale
-image_path = r'a1images\a1images\spider.png'
+image_path = r'a1images\a1images\shells.tif'
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
 # Apply custom histogram equalization
@@ -36,23 +36,23 @@ def plot_histograms(original_img, equalized_img):
     plt.figure(figsize=(12, 6))
     
     # Original image histogram
-    plt.subplot(2, 2, 1)
+    plt.subplot(1, 2, 1)
     plt.hist(original_img.flatten(), 256, [0, 256], color='gray')
     plt.title("Original Histogram")
     
     # Equalized image histogram
-    plt.subplot(2, 2, 2)
+    plt.subplot(1, 2, 2)
     plt.hist(equalized_img.flatten(), 256, [0, 256], color='gray')
     plt.title("Equalized Histogram")
-    
+    plt.show()
     # Original image
-    plt.subplot(2, 2, 3)
+    plt.subplot(1, 4, 3)
     plt.imshow(original_img, cmap='gray')
     plt.title("Original Image")
     plt.axis('off')
     
     # Equalized image
-    plt.subplot(2, 2, 4)
+    plt.subplot(1, 4, 4)
     plt.imshow(equalized_img, cmap='gray')
     plt.title("Equalized Image")
     plt.axis('off')
@@ -62,5 +62,3 @@ def plot_histograms(original_img, equalized_img):
 
 # Plot histograms before and after equalization
 plot_histograms(image, equalized_image)
-
-
