@@ -1,10 +1,10 @@
-##a) Split into Hue, Saturation, and Value Planes
 import cv2
 import matplotlib.pyplot as plt
 
 # Load the image in color
 image_path = r'a1images\a1images\jeniffer.jpg'
 image = cv2.imread(image_path)
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 # Convert the image from BGR to HSV
 hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -29,21 +29,20 @@ plt.title('Value Plane')
 plt.show()
 
 
+##############################################Select Plane and Threshold to Extract Foreground Mask
 
-## b) Select Plane and Threshold to Extract Foreground Mask
 # Threshold the value plane to extract the foreground
-_, mask = cv2.threshold(value, 120, 255, cv2.THRESH_BINARY)
+_, mask = cv2.threshold(saturation, 12, 255, cv2.THRESH_BINARY)
 
 # Display the mask (foreground extraction)
 plt.imshow(mask, cmap='gray')
 plt.title('Foreground Mask')
 plt.show()
 
+##################################################Obtain Foreground Using cv2.bitwise_and and Compute Histogram
 
-
-## c) Obtain Foreground Using cv2.bitwise_and and Compute Histogram
 # Apply the mask to extract the foreground from the value plane
-foreground = cv2.bitwise_and(value, value, mask=mask)
+foreground = cv2.bitwise_and(image_rgb, image_rgb, mask=mask)
 
 # Compute the histogram of the foreground
 hist_foreground = cv2.calcHist([foreground], [0], mask, [256], [0, 256])
@@ -59,9 +58,7 @@ plt.plot(hist_foreground)
 plt.title('Histogram of Foreground')
 plt.show()
 
-
-
-## (d) Obtain the Cumulative Sum of the Histogram
+#########################################Obtain the Cumulative Sum of the Histogram
 import numpy as np
 
 # Calculate the cumulative sum of the foreground histogram
@@ -76,8 +73,8 @@ plt.title('Cumulative Sum of Foreground Histogram')
 plt.show()
 
 
+#########################################Histogram Equalization of the Foreground Using Formulas
 
-## (e) Histogram Equalization of the Foreground Using Formulas
 # Mask all zeros to avoid division by zero
 cdf_m = np.ma.masked_equal(cdf_foreground, 0)
 
@@ -95,33 +92,35 @@ plt.show()
 
 
 
+############################################## (f) Extract Background and Combine with Histogram Equalized Foreground
 
-##(f) Extract Background and Combine with Histogram Equalized Foreground
 # Invert the mask to obtain the background
 background_mask = cv2.bitwise_not(mask)
 
 # Extract the background using the inverted mask
-background = cv2.bitwise_and(value, value, mask=background_mask)
+background = cv2.bitwise_and(image_rgb, image_rgb, mask=background_mask)
 
 # Combine the background with the equalized foreground
-final_image = cv2.add(background, equalized_foreground)
+final_image = cv2.add(cv2.cvtColor(background, cv2.COLOR_BGR2RGB),equalized_foreground )
 
-# Replace the value plane in the original HSV image with the final image
-hsv_image[:, :, 2] = final_image
-
-# Convert back to BGR for display
-result_image = cv2.cvtColor(hsv_image, cv2.COLOR_HSV2BGR)
+# Convert the final HSV image back to BGR and then to RGB for display
+result_image = cv2.cvtColor(final_image, cv2.COLOR_BGR2RGB)
 
 # Show the original image and the result with histogram-equalized foreground
 plt.figure(figsize=(12, 6))
+
 plt.subplot(1, 2, 1)
-plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))  # Convert the original image to RGB
 plt.title('Original Image')
 
 plt.subplot(1, 2, 2)
-plt.imshow(cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB))
+plt.imshow(cv2.cvtColor(result_image, cv2.COLOR_BGR2RGB))  # Display the result directly in RGB
 plt.title('Result with Histogram-Equalized Foreground')
 plt.show()
+
+
+
+
 
 
 
