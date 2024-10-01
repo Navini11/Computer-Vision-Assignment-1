@@ -11,6 +11,8 @@ assert f is not None
 c = np.array([(50, 50), (50, 100), (150, 255), (150, 150), (255, 255)])
 
 # Compute the piecewise linear intensity transformation based on the control points
+#linespace(starting point in y,end point in y, (number of pixels in x)+1)
+#c[0, 0]=c[0][0]
 t1 = np.linspace(0, c[0, 1], c[0, 0] + 1).astype('uint8')  # from 0 to c[0]
 t2 = np.linspace(c[0, 1] + 1, c[1, 1], c[1, 0] - c[0, 0]).astype('uint8')  # from c[0] to c[1]
 t3 = np.linspace(c[1, 1] + 1, c[2, 1], c[2, 0] - c[1, 0]).astype('uint8')  # from c[1] to c[2]
